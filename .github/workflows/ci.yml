@@ -19,5 +19,8 @@ jobs:
           java-version: '21'
           cache: maven
 
+      - name: Grant execute permission for mvnw
+        run: chmod +x mvnw
+
       - name: Build and test
         run: ./mvnw -B -ntp verify
