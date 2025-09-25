@@ -1,7 +1,8 @@
 name: CI
 
 on:
-  push:         # runs on every push to any branch
+  push:
+    branches: [ master] # runs on every merge to master
   pull_request: # runs for PRs targeting protected branch master
 
 jobs:
