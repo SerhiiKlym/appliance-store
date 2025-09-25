@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [ master] # runs on every merge to master
+  pull_request: # runs for PRs targeting protected branch master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Grant execute permission for mvnw
+        run: chmod +x mvnw
+
+      - name: Build and test
+        run: ./mvnw -B -ntp verify
