@@ -1,0 +1,4 @@
+java.lang.Long,id
+io.github.serhiiklym.appliance_store.model.Appliance,appliance
+java.math.BigDecimal,amount
+java.lang.Long,number

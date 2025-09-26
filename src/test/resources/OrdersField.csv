@@ -1,0 +1,5 @@
+java.lang.Long,id,1
+java.lang.Boolean,approved,1
+io.github.serhiiklym.appliance_store.model.Client,client,1
+io.github.serhiiklym.appliance_store.model.Employee,employee,1
+java.util.Set,orderRowSet,1
