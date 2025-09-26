@@ -1,7 +1,7 @@
 package io.github.serhiiklym.appliance_store.model;
 
 public class TestConstants {
-    public static final String CLASS_PACKAGE = "com.epam.rd.autocode.assessment.appliances.model";
+    public static final String CLASS_PACKAGE = "io.github.serhiiklym.appliance_store.model";
     public static final String CATEGORY_TYPE = CLASS_PACKAGE + "." + Category.ENUM_NAME;
     public static final String POWER_TYPE_TYPE = CLASS_PACKAGE + "." + PowerType.ENUM_NAME;
     public static final String MANUFACTURER_TYPE = CLASS_PACKAGE + "." + Manufacturer.CLASS_NAME;
