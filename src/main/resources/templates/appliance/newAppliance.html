@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <title>New client</title>
+</head>
+<body>
+<div th:replace="~{menunavy::navy}"></div>
+<h1 th:text="#{appliance.btn.new}"></h1>
+<form action="#" th:action="@{add-appliance}" th:object="${appliance}" method="post">
+    <p>
+    <p th:if="${#fields.hasErrors('name')}" class="text-danger">Invalid name</p>
+    <span th:text="#{object.appliance.name}">
+        </span> <input type="text" th:field="*{name}"/>
+    </p>
+
+
+    <p>
+    <p th:if="${#fields.hasErrors('category')}" class="text-danger">Invalid category</p>
+    <span th:text="#{object.appliance.category}"></span>
+
+    <select th:field="*{category}">
+        <option th:each="category : ${categories}" th:value="${category}" th:text="${category}"></option>
+    </select>
+    </p>
+    <p>
+    <p th:if="${#fields.hasErrors('model')}" class="text-danger">Invalid model</p>
+    <span th:text="#{object.appliance.model}"></span>
+    <input type="text" th:field="*{model}"/>
+    </p>
+
+    <p>
+    <p th:if="${#fields.hasErrors('manufacturer')}" class="text-danger">Invalid manufacturer</p>
+    <span th:text="#{object.appliance.manufacturer}"></span>
+
+    <select th:field="*{manufacturer}">
+        <option th:each="manufacturer : ${manufacturers}" th:value="${manufacturer.getId()}"
+                th:text="${manufacturer.getName()}"></option>
+    </select>
+    </p>
+    <p>
+    <p th:if="${#fields.hasErrors('powerType')}" class="text-danger">Invalid power type</p>
+    <span th:text="#{object.appliance.powerType}"></span>
+
+    <select th:field="*{powerType}">
+        <option th:each="powerType : ${powerTypes}" th:value="${powerType}" th:text="${powerType}"></option>
+    </select>
+    </p>
+
+    <p>
+    <p th:if="${#fields.hasErrors('characteristic')}" class="text-danger">Invalid characteristic</p>
+    <span th:text="#{object.appliance.characteristic}"></span>
+    <input type="text" th:field="*{characteristic}"/>
+    </p>
+
+    <p>
+    <p th:if="${#fields.hasErrors('description')}" class="text-danger">Invalid description</p>
+    <span th:text="#{object.appliance.description}"></span>
+    <input type="text" th:field="*{description}"/>
+    </p>
+
+    <p>
+    <p th:if="${#fields.hasErrors('power')}" class="text-danger">Invalid power</p>
+    <span th:text="#{object.appliance.power}"></span>
+    <input type="text" th:field="*{power}"/>
+    </p>
+    <p>
+    <p th:if="${#fields.hasErrors('price')}" class="text-danger">Invalid price</p>
+    <span th:text="#{object.appliance.price}"></span>
+    <input type="text" th:field="*{price}"/>
+    </p>
+
+    <p><input type="submit" value="Submit"/> <input type="reset" value="Reset"/></p>
+</form>
+<div th:replace="~{footer::footer}"></div>
+</body>
+</html>
