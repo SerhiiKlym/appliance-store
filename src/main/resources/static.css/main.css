@@ -1,0 +1,12 @@
+.icon{
+    line-height:20px;
+    height:20px;
+    width:20px;
+    border-radius:50%;
+    position:absolute;
+    background-color:#33BF61;
+    border:2px solid #33BF61;
+    font-size:16px;
+    color:#ffffff;
+    text-align:center;
+}
