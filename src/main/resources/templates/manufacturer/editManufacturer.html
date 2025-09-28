@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="${#locale}" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -14,11 +14,26 @@
 <!-- Navbar fragment -->
 <div th:replace="~{menunavy :: navy}"></div>
 
+<!-- Global alerts (resolve message codes from bundles) -->
+<div th:if="${flashSuccess} and ${param.noflash} == null"
+     class="alert alert-success alert-dismissible fade show" role="alert">
+    <span th:text="${#messages.msgOrNull(flashSuccess) ?: flashSuccess}">Success.</span>
+
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+<div th:if="${flashError} and ${param.noflash} == null"
+     class="alert alert-danger alert-dismissible fade show" role="alert">
+  <span th:text="${#messages.msgOrNull(flashError) ?: flashError}">Something went wrong.</span>.
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+
 <main class="container mt-3">
   <h1 class="mb-3" th:text="#{manufacturer.header.edit}">Edit Manufacturer</h1>
 
   <!-- Edit form -->
-  <form th:action="@{|/manufacturers/${id}|}" th:object="${form}" method="post" class="row g-3">
+  <form th:action="@{/manufacturers/{id}(id=${id})}" th:object="${form}" method="post" class="row g-3">
 
     <div class="col-md-6">
       <label for="name" class="form-label" th:text="#{object.manufacturer.name}">Name</label>
@@ -34,7 +49,20 @@
     <!-- Buttons -->
     <div class="col-12">
       <button type="submit" class="btn btn-primary" th:text="#{btn.save}">Save</button>
-      <a th:href="@{/manufacturers}" class="btn btn-outline-secondary" th:text="#{btn.cancel}">Cancel</a>
+      <a th:href="@{/manufacturers(noflash=true)}" class="btn btn-outline-secondary" th:text="#{btn.cancel}">Cancel</a>
+
+      <button type="submit"
+              class="btn btn-outline-danger ms-auto"
+              formmethod="post"
+              th:formaction="@{/manufacturers/{id}/delete(id=${id})}"
+              th:text="#{btn.delete}">
+        Delete
+      </button>
+      <!-- Inline red text under the button -->
+      <div class="text-danger small mt-2"
+           th:if="${flashErrorCode}"
+           th:text="#{${flashErrorCode}(${flashErrorArgs})}"></div>
+
     </div>
 
     <!-- If/when Spring Security is enabled, this includes the CSRF token -->
