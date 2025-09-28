@@ -2,10 +2,13 @@ package io.github.serhiiklym.appliance_store.controller;
 
 import io.github.serhiiklym.appliance_store.controller.dto.ManufacturerForm;
 import io.github.serhiiklym.appliance_store.error.ConflictException;
+import io.github.serhiiklym.appliance_store.error.DuplicateManufacturerNameException;
+import io.github.serhiiklym.appliance_store.error.NotFoundException;
 import io.github.serhiiklym.appliance_store.service.ManufacturerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,37 +26,41 @@ public class ManufacturerController {
     @GetMapping
     public String list(Model model, @ModelAttribute("flashSuccess") String flashSuccess) {
         model.addAttribute("manufacturers", service.list());
-        return "manufacture/manufacturers";
+        return "manufacturer/manufacturers";
     }
 
     @GetMapping("/{id}")
     public String details(Model model, @PathVariable("id") Long id) {
         model.addAttribute("manufacturer", service.getByIdOrThrow(id));
-        return "manufacture/manufacturerDetails";
+        return "manufacturer/manufacturerDetails";
     }
 
     // GET /manufacturers/new -> create form
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("form", new ManufacturerForm());
-        return "manufacture/newManufacturer";
+        return "manufacturer/newManufacturer";
     }
 
 
     // POST /manufacturers -> create then redirect
     @PostMapping
     public String create(@Valid @ModelAttribute("form") ManufacturerForm form,
-                         BindingResult errors,
+                         BindingResult binding,
                          RedirectAttributes ra) {
-        if (errors.hasErrors()) return "manufacture/newManufacturer";
+        if (binding.hasErrors()) return "manufacturer/newManufacturer";
+
         try {
-            service.create(form.getName());
-            ra.addFlashAttribute("flashSuccess", "Manufacturer created.");
-            return "redirect:/manufacturers";
-        } catch (ConflictException e) {
-            errors.rejectValue("name", "duplicate", e.getMessage());
-            return "manufacture/newManufacturer";
+            service.create(form.getName().trim());
+//            ra.addFlashAttribute("flashSuccess", "Manufacturer created: "  + form.getName());
+//            return "redirect:/manufacturers";
+        } catch (DuplicateManufacturerNameException | DataIntegrityViolationException ex) {
+            binding.rejectValue("name", "manufacturer.name.duplicate",
+                    new Object[]{form.getName()}, null);
+            return "manufacturer/newManufacturer"; // stay on page, show inline error
         }
+        ra.addFlashAttribute("flashSuccess", "Created: " + form.getName());
+        return "redirect:/manufacturers";
     }
 
     // GET /manufacturers/{id}/edit -> edit form
@@ -64,7 +71,7 @@ public class ManufacturerController {
         form.setName(m.getName());
         model.addAttribute("id", id);
         model.addAttribute("form", form);
-        return "manufacture/editManufacturer";
+        return "manufacturer/editManufacturer";
     }
 
 
@@ -74,22 +81,33 @@ public class ManufacturerController {
                          @Valid @ModelAttribute("form") ManufacturerForm form,
                          BindingResult errors,
                          RedirectAttributes ra) {
-        if (errors.hasErrors()) return "manufacture/editManufacturer";
+        if (errors.hasErrors()) return "manufacturer/editManufacturer";
         try {
             service.update(id, form.getName()); // or your update method
-            ra.addFlashAttribute("flashSuccess", "Manufacturer updated.");
+            ra.addFlashAttribute("flashSuccess", "manufacturer.updated");
             return "redirect:/manufacturers";
         } catch (ConflictException e) {
             errors.rejectValue("name", "duplicate", e.getMessage());
-            return "manufacture/editManufacturer";
+            return "manufacturer/editManufacturer";
         }
     }
 
     // POST /manufacturers/{id}/delete -> delete then redirect
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id, RedirectAttributes ra) {
-        service.deleteManufacturer(id);
-        ra.addFlashAttribute("flashSuccess", "Manufacturer deleted.");
-        return "redirect:/manufacturers";
+        try {
+            service.deleteManufacturer(id);
+            log.info("Deleted manufacturer id={}", id);
+            ra.addFlashAttribute("flashSuccess", "manufacturer.deleted");
+            return "redirect:/manufacturers";
+        } catch (DataIntegrityViolationException ex) {
+            // there are appliances linked to this brand
+            ra.addFlashAttribute("flashError", "manufacturer.delete.constraint");
+            ra.addAttribute("id", id); // <-- lets {id} expand in the redirect URL
+            return "redirect:/manufacturers/{id}/edit";
+        } catch (NotFoundException ex) {
+            ra.addFlashAttribute("flashError", "manufacturer.notfound");
+            return "redirect:/manufacturers";
+        }
     }
 }
