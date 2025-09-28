@@ -19,7 +19,7 @@ public class DevSecurityConfig {
         // Allow H2 console + static assets without auth; everything else requires auth
         http.authorizeHttpRequests(auth -> auth
                         .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .requestMatchers("/", "/error", "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated()
                 )
 

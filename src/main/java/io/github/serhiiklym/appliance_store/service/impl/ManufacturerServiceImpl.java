@@ -1,6 +1,5 @@
 package io.github.serhiiklym.appliance_store.service.impl;
 
-import io.github.serhiiklym.appliance_store.error.ConflictException;
 import io.github.serhiiklym.appliance_store.error.DuplicateManufacturerNameException;
 import io.github.serhiiklym.appliance_store.error.NotFoundException;
 import io.github.serhiiklym.appliance_store.model.Manufacturer;
