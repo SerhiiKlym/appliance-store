@@ -91,16 +91,13 @@ public class ManufacturerServiceImpl implements ManufacturerService {
     @Override
     @Transactional
     public void deleteManufacturer(Long id) {
-        log.info("Deleting Manufacturer with ID={}", id);
+        log.info("Attempting to delete Manufacturer with ID={}", id);
         try {
             manufacturerRepository.deleteById(id);
-            log.info("Deleted manufacturer id={}", id);
+            manufacturerRepository.flush(); // triggers FK violations
         } catch (EmptyResultDataAccessException e) { // good exception?
             log.warn("No Manufacturer id={} to delete", id, e);
             throw new NotFoundException("Manufacturer not found with ID: " + id); // 404
-        } catch (DataIntegrityViolationException e) {
-            log.warn("Cannot delete Manufacturer due to FK constraint id={}", id, e);
-            throw new ConflictException("Cannot delete manufacturer with existing appliances. ID " + id); // 409- FK collision
         }
     }
 
