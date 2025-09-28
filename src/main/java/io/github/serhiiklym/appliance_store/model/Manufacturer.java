@@ -23,4 +23,19 @@ public class Manufacturer {
     @Getter
     private String name;
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Manufacturer that = (Manufacturer) o;
+        return getId().equals(that.getId()) && getName().equals(that.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getName().hashCode();
+        return result;
+    }
 }
