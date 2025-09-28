@@ -1,0 +1,39 @@
+.icon {
+    line-height:20px;
+    height:20px;
+    width:20px;
+    border-radius:50%;
+    position:absolute;
+    background-color:#33BF61;
+    border:2px solid #33BF61;
+    font-size:16px;
+    color:#ffffff;
+    text-align:center;
+}
+
+/* Full-bleed hero background with a subtle overlay for contrast */
+.hero {
+  position: relative;
+  min-height: clamp(320px, 55vh, 640px);
+  /* Dark-ish overlay + image, adjust the 0.55 for more/less darkness */
+  background:
+    linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+    url("/img/hero-appliances.webp") center / cover no-repeat;
+  color: #fff;               /* make all text white by default */
+  border-radius: 0.75rem;    /* keep your rounded-3 look */
+  overflow: hidden;          /* tidy rounded corners */
+}
+
+.hero a.btn-outline-primary {
+  /* outline buttons on dark backgrounds can be low-contrast;
+     this nudges the text to stay readable */
+  color: #fff;
+  border-color: rgba(255,255,255,.7);
+}
+.hero a.btn-outline-primary:hover {
+  background: rgba(255,255,255,.15);
+  border-color: #fff;
+}
+
+td a { text-decoration: none; }
+td a:hover, td a:focus { text-decoration: underline; }

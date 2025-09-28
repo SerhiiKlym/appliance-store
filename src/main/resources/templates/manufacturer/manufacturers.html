@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="${#locale}" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Brands</title>
+    <link rel="stylesheet" th:href="@{/css/main.css}">
+</head>
+<body>
+    <div th:replace="~{menunavy::navy}"></div>
+
+    <!-- Alerts (safe i18n lookup + fallback) -->
+    <th:block th:if="${flashSuccess}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${#messages.msgOrNull(flashSuccess) ?: flashSuccess}">Success.</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </th:block>
+
+    <th:block th:if="${flashError}">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${#messages.msgOrNull(flashError) ?: flashError}">Something went wrong.</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </th:block>
+
+    <h1 th:text="#{manufacturer.header.list}"></h1>
+    <table class="table table-hover">
+
+        <thead>
+        <tr class="table-dark">
+            <th th:text="#{object.manufacturer.id}">ID</th>
+            <th th:text="#{object.manufacturer.name}">Name</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="manufacturer: ${manufacturers}">
+            <td th:text="${manufacturer.id}"></td>
+            <td>
+                <a th:href="@{/manufacturers/{id}/edit(id=${manufacturer.id})}" th:text="${manufacturer.name}" th:title="#{btn.edit}"> </a>
+            </td>
+        </tr>
+        </tbody>
+
+    </table>
+    <a th:href="@{/manufacturers/new}" class="btn btn-primary" th:text="#{manufacturer.btn.new}"></a>
+    <div th:replace="~{footer::footer}"></div>
+
+</body>
+</html>

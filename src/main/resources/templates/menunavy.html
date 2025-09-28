@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="/" th:text="#{shop.name}"></a>
             <div class="collapse navbar-collapse">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav me-auto">
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/clients}" th:text="#{clients.menu.name}"></a>
                     </li>
@@ -23,6 +23,19 @@
                         <a class="nav-link" th:href="@{/orders}" th:text="#{order.menu.name}"></a>
                     </li>
                 </ul>
+
+                <!-- RIGHT-STUCK language switcher -->
+                <div class="btn-group ms-auto" role="group" aria-label="Language">
+                    <a class="btn btn-secondary"
+                       th:href="@{?lang=en}" th:text="#{language.name.en}"
+                       th:classappend="${#locale.language}=='en' ? ' active' : ''"
+                       th:attr="aria-pressed=${#locale.language}=='en'">EN</a>
+
+                    <a class="btn btn-secondary"
+                       th:href="@{?lang=uk}" th:text="#{language.name.uk}"
+                       th:classappend="${#locale.language}=='uk' ? ' active' : ''"
+                       th:attr="aria-pressed=${#locale.language}=='uk'">УКР</a>
+                </div>
             </div>
         </div>
     </nav>
