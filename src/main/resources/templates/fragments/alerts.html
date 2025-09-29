@@ -1,0 +1,9 @@
+<!-- Reusable alert fragment -->
+<!DOCTYPE html>
+<html lang="${#locale}" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="alert(type, message)">
+    <div th:class="'alert alert-' + ${type}" role="alert" th:text="${message}">Message</div>
+</div>
+</body>
+</html>

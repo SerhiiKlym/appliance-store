@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title th:text="#{error.404.title}">Page not found</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}" />
+</head>
+<body>
+<main class="container" style="max-width: 720px; margin-top: 3rem;">
+  <h1 th:text="#{error.404.heading}">Page not found</h1>
+  <p th:text="#{error.404.text}">The page you requested doesn’t exist.</p>
+  <p><a th:href="@{/}" th:text="#{nav.backHome}">Back to home</a></p>
+</main>
+</body>
+</html>

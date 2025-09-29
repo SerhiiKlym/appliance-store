@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <title th:text="#{login.title}">Sign in</title>
+  <link rel="stylesheet" th:href="@{/css/main.css}" />
+  <!-- If you use Bootstrap, include it here -->
+</head>
+<body>
+<main class="container" style="max-width: 420px; margin-top: 3rem;">
+  <h1 class="mb-3" th:text="#{login.heading}">Sign in</h1>
+
+  <!-- Login errors and logout notice -->
+  <div th:if="${param.error}"
+       th:replace="~{fragments/alerts :: alert('danger', #{login.error})}"></div>
+
+  <div th:if="${param.logout}"
+       th:replace="~{fragments/alerts :: alert('success', #{login.loggedout})}"></div>
+
+  <form th:action="@{/login}" method="post" class="card p-3 shadow-sm">
+    <label for="username" class="form-label" th:text="#{login.username}">Username</label>
+    <input id="username" name="username" type="text" class="form-control" required autofocus />
+
+    <label for="password" class="form-label mt-3" th:text="#{login.password}">Password</label>
+    <input id="password" name="password" type="password" class="form-control" required />
+
+    <!-- CSRF token -->
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+    <button class="btn btn-primary mt-3 w-100" type="submit" th:text="#{login.submit}">
+      Sign in
+    </button>
+  </form>
+
+  <p class="mt-3">
+    <a th:href="@{/}" th:text="#{nav.backHome}">Back to home</a>
+  </p>
+</main>
+</body>
+</html>
