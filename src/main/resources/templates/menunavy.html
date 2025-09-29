@@ -1,49 +1,66 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="${#locale}" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <body>
 <div th:fragment="navy">
-    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-primary">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/" th:text="#{shop.name}"></a>
+            <a class="navbar-brand" th:href="@{/}" th:text="#{shop.name}">Appliance Store</a>
+
             <div class="collapse navbar-collapse">
+                <!-- LEFT: app sections -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/clients}" th:text="#{clients.menu.name}"></a>
+                        <a class="nav-link" th:href="@{/clients}" th:text="#{clients.menu.name}">Clients</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/employees}" th:text="#{employees.menu.name}"></a>
+                        <a class="nav-link" th:href="@{/employees}" th:text="#{employees.menu.name}">Employees</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/manufacturers}" th:text="#{manufacturers.menu.name}"></a>
+                        <a class="nav-link" th:href="@{/manufacturers}" th:text="#{manufacturers.menu.name}">Manufacturers</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/appliances}" th:text="#{appliances.menu.name}"></a>
+                        <a class="nav-link" th:href="@{/appliances}" th:text="#{appliances.menu.name}">Appliances</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/orders}" th:text="#{order.menu.name}"></a>
+                        <a class="nav-link" th:href="@{/orders}" th:text="#{order.menu.name}">Orders</a>
                     </li>
                 </ul>
 
-                <!-- RIGHT-STUCK language switcher -->
-                <div class="btn-group ms-auto" role="group" aria-label="Language">
-                    <a class="btn btn-secondary"
-                       th:href="@{?lang=en}" th:text="#{language.name.en}"
-                       th:classappend="${#locale.language}=='en' ? ' active' : ''"
-                       th:attr="aria-pressed=${#locale.language}=='en'">EN</a>
+                <!-- RIGHT: language switcher + auth controls -->
+                <div class="d-flex align-items-center ms-auto gap-3">
 
-                    <a class="btn btn-secondary"
-                       th:href="@{?lang=uk}" th:text="#{language.name.uk}"
-                       th:classappend="${#locale.language}=='uk' ? ' active' : ''"
-                       th:attr="aria-pressed=${#locale.language}=='uk'">УКР</a>
+                    <!-- Language switcher -->
+                    <div class="btn-group" role="group" aria-label="Language">
+                        <a class="btn btn-outline-light btn-sm"
+                           th:href="@{?lang=en}"
+                           th:text="#{language.name.en}"
+                           th:classappend="${#locale.language}=='en' ? ' active' : ''"
+                           th:attr="aria-pressed=${#locale.language}=='en'">EN</a>
+
+                        <a class="btn btn-outline-light btn-sm"
+                           th:href="@{?lang=uk}"
+                           th:text="#{language.name.uk}"
+                           th:classappend="${#locale.language}=='uk' ? ' active' : ''"
+                           th:attr="aria-pressed=${#locale.language}=='uk'">УКР</a>
+                    </div>
+
+                    <!-- Anonymous: Login link -->
+                    <a class="nav-link" sec:authorize="isAnonymous()"
+                       th:href="@{/login}" th:text="#{nav.login}">Login</a>
+
+                    <!-- Authenticated: username + Logout (POST with CSRF) -->
+                    <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="d-flex align-items-center gap-2 m-0">
+            <span class="navbar-text small">
+              <span th:text="#{nav.hello}">Hello</span>,
+              <strong sec:authentication="name">user</strong>
+            </span>
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <button type="submit" class="btn btn-outline-light btn-sm" th:text="#{nav.logout}">Logout</button>
+                    </form>
+
                 </div>
             </div>
-        </div>
-    </nav>
-</div>
-<div th:fragment="line">
-    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Appliance store</a>
         </div>
     </nav>
 </div>

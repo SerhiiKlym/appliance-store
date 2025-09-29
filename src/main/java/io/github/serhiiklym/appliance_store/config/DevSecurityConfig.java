@@ -4,8 +4,13 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 
@@ -15,24 +20,44 @@ public class DevSecurityConfig {
 
     @Bean
     SecurityFilterChain devSecurity(HttpSecurity http) throws Exception {
-
-        // Allow H2 console + static assets without auth; everything else requires auth
-        http.authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PathRequest.toH2Console()).permitAll()
-                        .requestMatchers("/**").permitAll()
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/h2-console/**").permitAll()// to H2 console
+                        .requestMatchers("/", "/index", "/login", "/error/**",
+                                "/css/**", "/img/**", "/webjars/**", "/i18n/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/manufacturers/**", "/appliances/**", "/clients/**", "/employees/**")
+                        .hasAnyRole("EMPLOYEE", "ADMIN")
                         .anyRequest().authenticated()
                 )
-
-                // Ignore CSRF only for the H2 console's POSTs (e.g., /h2-console/login.do)
                 .csrf(csrf -> csrf.ignoringRequestMatchers(PathRequest.toH2Console()))
-
-                // Permit same-origin frames so the H2 UI (frameset) can render
-                .headers(h -> h.frameOptions(f -> f.sameOrigin()))
-
-                // Keep simple login mechanisms available in dev
-                .formLogin(Customizer.withDefaults())
-                .httpBasic(Customizer.withDefaults());
+                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/login?error")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                );
 
         return http.build();
+    }
+
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    UserDetailsService users(PasswordEncoder pe) {
+        var admin = User.withUsername("admin").password(pe.encode("admin123")).roles("ADMIN").build();
+        var employee = User.withUsername("employee").password(pe.encode("employee123")).roles("EMPLOYEE").build();
+        var client = User.withUsername("client").password(pe.encode("client123")).roles("CLIENT").build();
+        return new InMemoryUserDetailsManager(admin, employee, client);
     }
 }
