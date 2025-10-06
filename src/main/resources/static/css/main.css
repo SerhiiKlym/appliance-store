@@ -37,3 +37,37 @@
 
 td a { text-decoration: none; }
 td a:hover, td a:focus { text-decoration: underline; }
+
+:root{
+  --brand-primary:#0d6efd;        /* Bootstrap primary */
+  --card-bg: rgba(255,255,255,.85);
+  --ring:#9ec5fe;
+}
+
+/* Full-screen soft gradient */
+.login-bg{
+  background: radial-gradient(1200px 600px at 10% -10%, #e7f1ff 0, transparent 60%),
+              radial-gradient(1200px 700px at 110% 110%, #eaf7ef 0, transparent 60%),
+              linear-gradient(180deg, #f8f9fa 0%, #eef1f6 100%);
+}
+
+/* Glassy card */
+.glass{
+  background: var(--card-bg);
+  backdrop-filter: blur(8px);
+}
+
+/* Inputs: subtle focus ring */
+.form-control:focus{
+  box-shadow: 0 0 0 .25rem var(--ring);
+  border-color: var(--brand-primary);
+}
+
+/* Button shape tweak */
+.btn{
+  border-radius: 0.75rem;
+}
+.card{
+  border-radius: 1rem;
+}
+
