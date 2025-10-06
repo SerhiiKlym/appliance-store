@@ -1,6 +1,7 @@
 package io.github.serhiiklym.appliance_store.controller.dto;
 
 import io.github.serhiiklym.appliance_store.model.Category;
+import io.github.serhiiklym.appliance_store.model.Manufacturer;
 import io.github.serhiiklym.appliance_store.model.PowerType;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -20,8 +21,7 @@ public class ApplianceForm {
     private String name;
 
     @NotNull(message = "{appliance.manufacturer.id.required}")
-    @Min(1)
-    private Long manufacturerId; // select
+    private Manufacturer manufacturer; // select
 
     @NotNull(message = "{appliance.category.required}")
     private Category category; // select
@@ -39,6 +39,7 @@ public class ApplianceForm {
     private String description;
 
     @PositiveOrZero(message = "{appliance.power.nonNegative}")
+    @NotNull(message = "{appliance.power.required}")
     private Integer power;
 
     @NotNull(message = "{appliance.price.required}")
