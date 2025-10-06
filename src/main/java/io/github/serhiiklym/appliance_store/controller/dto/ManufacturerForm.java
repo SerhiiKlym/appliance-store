@@ -8,8 +8,6 @@ import lombok.NoArgsConstructor;
 /**
  * Minimal form object for create/update Manufacturer.
  */
-
-//TODO add messages to props
 @Data
 @NoArgsConstructor
 public class ManufacturerForm {
