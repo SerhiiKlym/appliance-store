@@ -14,7 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
+
+import static io.github.serhiiklym.appliance_store.repository.util.RepositoryUtilities.trimInputString;
 
 @Slf4j
 @Service
@@ -100,8 +101,4 @@ public class ManufacturerServiceImpl implements ManufacturerService {
         }
     }
 
-    // -- helpers --
-    private static String trimInputString(String input) {
-        return Objects.requireNonNull(input, "name must not be null").trim();
-    }
 }
