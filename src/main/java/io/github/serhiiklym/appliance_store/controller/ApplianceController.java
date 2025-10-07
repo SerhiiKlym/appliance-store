@@ -1,6 +1,7 @@
 package io.github.serhiiklym.appliance_store.controller;
 
 import io.github.serhiiklym.appliance_store.controller.dto.ApplianceForm;
+import io.github.serhiiklym.appliance_store.controller.dto.ManufacturerForm;
 import io.github.serhiiklym.appliance_store.error.DuplicateApplianceNameException;
 import io.github.serhiiklym.appliance_store.model.Category;
 import io.github.serhiiklym.appliance_store.model.Manufacturer;
@@ -14,10 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -59,6 +57,43 @@ public class ApplianceController {
             return "/appliance/newAppliance"; // stay on page, show inline error
         }
         ra.addFlashAttribute("flashSuccess", "Created: " + form.getName());
+        return "redirect:/appliances";
+    }
+
+    @GetMapping("/{id}/edit")
+    public String showEditForm(@PathVariable Long id, Model model) {
+        var a = service.getByIdOrThrow(id);
+
+        var form = new ApplianceForm();
+        form.setModel(a.getModel());
+        form.setCharacteristic(a.getCharacteristic());
+        form.setDescription(a.getDescription());
+        form.setPrice(a.getPrice());
+
+        model.addAttribute("id", id);
+        model.addAttribute("form", form);
+        model.addAttribute("appliance", a); // for read-only display
+        return "appliance/editAppliance";
+    }
+
+    @PostMapping("/{id}")
+    public String update(
+            @PathVariable Long id,
+            @Valid @ModelAttribute("form") ApplianceForm form,
+            BindingResult br,
+            Model model,
+            RedirectAttributes ra) {
+
+        if (br.hasErrors()) {
+            model.addAttribute("id", id);
+            model.addAttribute("appliance", service.getByIdOrThrow(id));
+            return "appliance/editAppliance";
+        }
+
+        // Update ONLY the editable fields
+        service.update(form.getModel(), form.getCharacteristic(), form.getDescription(), form.getPrice());
+
+        ra.addFlashAttribute("flashSuccess", "appliance.msg.updated");
         return "redirect:/appliances";
     }
 
