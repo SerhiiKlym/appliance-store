@@ -99,8 +99,7 @@ public class ApplianceServiceImpl implements ApplianceService {
     }
 
     @Override
-    public Appliance update(Long id, String name, Category cat, String model, Long manufacturerId, PowerType powerType,
-                            String props, String descr, Integer power, BigDecimal price) {
+    public Appliance update(String model, String props, String descr, BigDecimal price) {
         return null;
     }
 
