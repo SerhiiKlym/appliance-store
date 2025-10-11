@@ -40,7 +40,6 @@ public class Appliance {
     private Category category;
 
     @Column(name = "MODEL")
-    @NotBlank
     private String model;
 
     @Column(name = "POWER_TYPE")

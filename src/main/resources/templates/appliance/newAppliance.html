@@ -12,16 +12,16 @@
 <body>
 <div th:replace="~{menunavy::navy}"></div>
 <h1 th:text="#{appliance.btn.new}"></h1>
-<form action="#" th:action="@{add-appliance}" th:object="${appliance}" method="post">
+<form action="#" th:action="@{/appliances}" th:object="${form}" method="post">
     <p>
-    <p th:if="${#fields.hasErrors('name')}" class="text-danger">Invalid name</p>
+    <p th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></p>
     <span th:text="#{object.appliance.name}">
         </span> <input type="text" th:field="*{name}"/>
     </p>
 
 
     <p>
-    <p th:if="${#fields.hasErrors('category')}" class="text-danger">Invalid category</p>
+    <p th:if="${#fields.hasErrors('category')}" th:errors="*{category}" class="text-danger"></p>
     <span th:text="#{object.appliance.category}"></span>
 
     <select th:field="*{category}">
@@ -29,13 +29,13 @@
     </select>
     </p>
     <p>
-    <p th:if="${#fields.hasErrors('model')}" class="text-danger">Invalid model</p>
+    <p th:if="${#fields.hasErrors('model')}" th:errors="*{model}" class="text-danger"></p>
     <span th:text="#{object.appliance.model}"></span>
     <input type="text" th:field="*{model}"/>
     </p>
 
     <p>
-    <p th:if="${#fields.hasErrors('manufacturer')}" class="text-danger">Invalid manufacturer</p>
+    <p th:if="${#fields.hasErrors('manufacturer')}" th:errors="*{manufacturer}" class="text-danger"></p>
     <span th:text="#{object.appliance.manufacturer}"></span>
 
     <select th:field="*{manufacturer}">
@@ -44,7 +44,7 @@
     </select>
     </p>
     <p>
-    <p th:if="${#fields.hasErrors('powerType')}" class="text-danger">Invalid power type</p>
+    <p th:if="${#fields.hasErrors('powerType')}" th:errors="*{powerType}" class="text-danger"></p>
     <span th:text="#{object.appliance.powerType}"></span>
 
     <select th:field="*{powerType}">
@@ -53,24 +53,24 @@
     </p>
 
     <p>
-    <p th:if="${#fields.hasErrors('characteristic')}" class="text-danger">Invalid characteristic</p>
+    <p th:if="${#fields.hasErrors('characteristic')}" th:errors="*{characteristic}" class="text-danger"></p>
     <span th:text="#{object.appliance.characteristic}"></span>
     <input type="text" th:field="*{characteristic}"/>
     </p>
 
     <p>
-    <p th:if="${#fields.hasErrors('description')}" class="text-danger">Invalid description</p>
+    <p th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="text-danger"></p>
     <span th:text="#{object.appliance.description}"></span>
     <input type="text" th:field="*{description}"/>
     </p>
 
     <p>
-    <p th:if="${#fields.hasErrors('power')}" class="text-danger">Invalid power</p>
+    <p th:if="${#fields.hasErrors('power')}" th:errors="*{power}" class="text-danger"></p>
     <span th:text="#{object.appliance.power}"></span>
     <input type="text" th:field="*{power}"/>
     </p>
     <p>
-    <p th:if="${#fields.hasErrors('price')}" class="text-danger">Invalid price</p>
+    <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="text-danger"></p>
     <span th:text="#{object.appliance.price}"></span>
     <input type="text" th:field="*{price}"/>
     </p>

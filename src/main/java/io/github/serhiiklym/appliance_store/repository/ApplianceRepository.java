@@ -1,4 +1,8 @@
 package io.github.serhiiklym.appliance_store.repository;
 
-public interface ApplianceRepository {
+import io.github.serhiiklym.appliance_store.model.Appliance;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface ApplianceRepository extends JpaRepository<Appliance, Long> {
+    boolean existsByManufacturerIdAndNameIgnoreCase(Long manufacturerId, String name);
 }

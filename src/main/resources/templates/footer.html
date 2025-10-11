@@ -1,11 +1,55 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <body>
+<!-- Footer Fragment -->
+<footer th:fragment="footer"
+        class="mt-auto border-top bg-light">
+    <div class="container py-4">
+        <div class="row g-3">
+            <!-- About -->
+            <div class="col-12 col-md-4">
+                <h6 class="text-uppercase mb-3" th:text="#{footer.who.we.are}">About</h6>
+                <a th:href="@{/}" class="link-secondary" th:text="#{footer.about}">Contact</a>
+            </div>
 
-    <footer th:fragment="footer" class="footer fixed-bottom text-center">
-        <div>
-            <span class="text-center">© 2025 Serhii Klymenko Spring Web App project</span>
+            <!-- Our business -->
+            <div class="col-12 col-md-4">
+                <h6 class="text-uppercase mb-3" th:text="#{footer.what.we.do}">Explore</h6>
+                <nav aria-label="Footer" class="d-flex flex-column gap-2">
+                    <a th:href="@{/manufacturers}" class="link-secondary" th:text="#{footer.we.work.with.manufacturers}">Manufacturers</a>
+                    <a th:href="@{/appliances}" class="link-secondary" th:text="#{footer.we.sell.appliances}">Appliances</a>
+                </nav>
+            </div>
+
+            <!-- Contacts -->
+            <div class="col-12 col-md-4">
+                <h6 class="text-uppercase mb-3" th:text="#{footer.contact.us}">Help &amp; Legal</h6>
+                <nav class="d-flex flex-column gap-2">
+<!--                    // TODO contacts.html -->
+                    <a th:href="@{/contacts}" class="link-secondary" th:text="#{footer.contacts}">Contacts</a>
+                </nav>
+
+            </div>
         </div>
-    </footer>
+
+        <hr class="my-4">
+
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center small text-secondary">
+            <div>
+                <!-- © YEAR AppName. All rights reserved. -->
+                <span>&copy; <span th:text="${#temporals.createNow().year}">2069</span></span>
+                <span th:text="#{app.name}">Appliance Store</span>.
+                <span th:text="#{footer.rights}">All rights reserved.</span>
+            </div>
+            <div class="mt-2 mt-md-0">
+                <span class="me-2" th:text="#{footer.build}">Build</span>
+                <code th:text="${@environment?.getProperty('app.version', 'v0.1')}"
+                      class="text-muted">v0.1</code>
+            </div>
+        </div>
+    </div>
+</footer>
 </body>
 </html>
