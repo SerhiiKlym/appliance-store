@@ -26,7 +26,7 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(path = "/appliances")
-public class ApplianceController {
+public class ApplianceController extends BaseController {
 
     private final ApplianceService service;
     private final ManufacturerService manufacturerService;
@@ -40,25 +40,24 @@ public class ApplianceController {
     @GetMapping("/add")
     public String showCreateForm(Model model) {
         model.addAttribute("form", new ApplianceForm());
-        return "/appliance/newAppliance";
+        return "appliance/newAppliance";
     }
 
     @PostMapping
     public String create(@Valid @ModelAttribute("form") ApplianceForm form,
                          BindingResult binding,
-                         RedirectAttributes ra){
-        if (binding.hasErrors()) return "/appliance/newAppliance";
+                         RedirectAttributes ra) {
+        if (binding.hasErrors()) return "appliance/newAppliance";
 
         try {
             service.create(form.getName(), form.getCategory(), form.getModel(), form.getManufacturer(),
                     form.getPowerType(), form.getCharacteristic(), form.getDescription(),
                     form.getPower(), form.getPrice());
         } catch (DuplicateApplianceNameException | DataIntegrityViolationException ex) {
-            binding.rejectValue("name", "appliance.name.duplicate",
-                    new Object[]{form.getName()}, null);
-            return "/appliance/newAppliance"; // stay on page, show inline error
+            flashErrorCode(ra, "appliance.name.duplicate", form.getName());
+            return "appliance/newAppliance"; // stay on page, show inline error
         }
-        ra.addFlashAttribute("flashSuccess", "Created: " + form.getName());
+        flashSuccess(ra, "appliance.created");
         return "redirect:/appliances";
     }
 
@@ -95,7 +94,7 @@ public class ApplianceController {
         // Update ONLY the editable fields
         service.update(id, form.getModel(), form.getCharacteristic(), form.getDescription(), form.getPrice());
 
-        ra.addFlashAttribute("flashSuccess", "appliance.msg.updated");
+        flashSuccess(ra, "appliance.updated");
         return "redirect:/appliances";
     }
 
@@ -104,14 +103,13 @@ public class ApplianceController {
         try {
             service.deleteAppliance(id);
             log.info("Deleted Appliance with id={}", id);
-            ra.addFlashAttribute("flashSuccess", "appliance.deleted");
+            flashSuccess(ra, "appliance.deleted");
             return "redirect:/appliances";
         } catch (DataIntegrityViolationException ex) {
-            ra.addFlashAttribute("flashError", "appliance.delete.constraint");
-            ra.addAttribute("id", id); // <-- lets {id} expand in the redirect URL
+            flashErrorCode(ra, "appliance.delete.constraint");
             return "redirect:/appliance/{id}/edit";
         } catch (NotFoundException ex) {
-            ra.addFlashAttribute("flashError", "appliance.notfound");
+            flashErrorText(ra, "appliance.notfound");
             return "redirect:/appliances";
         }
     }
