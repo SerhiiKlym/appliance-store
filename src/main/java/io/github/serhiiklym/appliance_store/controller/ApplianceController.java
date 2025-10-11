@@ -2,7 +2,6 @@ package io.github.serhiiklym.appliance_store.controller;
 
 import io.github.serhiiklym.appliance_store.controller.dto.ApplianceEditForm;
 import io.github.serhiiklym.appliance_store.controller.dto.ApplianceForm;
-import io.github.serhiiklym.appliance_store.controller.dto.ManufacturerForm;
 import io.github.serhiiklym.appliance_store.error.DuplicateApplianceNameException;
 import io.github.serhiiklym.appliance_store.error.NotFoundException;
 import io.github.serhiiklym.appliance_store.model.Category;
@@ -34,7 +33,7 @@ public class ApplianceController extends BaseController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("appliances", service.list());
-        return "/appliance/appliances";
+        return "appliance/appliances";
     }
 
     @GetMapping("/add")

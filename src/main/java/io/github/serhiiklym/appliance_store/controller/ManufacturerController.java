@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(path = "/manufacturers")
-public class ManufacturerController {
+public class ManufacturerController extends BaseController {
 
     private final ManufacturerService service;
 
@@ -45,14 +45,11 @@ public class ManufacturerController {
 
         try {
             service.create(form.getName().trim());
-//            ra.addFlashAttribute("flashSuccess", "Manufacturer created: "  + form.getName());
-//            return "redirect:/manufacturers";
         } catch (DuplicateManufacturerNameException | DataIntegrityViolationException ex) {
-            binding.rejectValue("name", "manufacturer.name.duplicate",
-                    new Object[]{form.getName()}, null);
+            flashErrorCode(ra, "manufacturer.name.duplicate", form.getName());
             return "manufacturer/newManufacturer"; // stay on page, show inline error
         }
-        ra.addFlashAttribute("flashSuccess", "Created: " + form.getName());
+        flashSuccess(ra, "manufacturer.created");
         return "redirect:/manufacturers";
     }
 
@@ -76,10 +73,10 @@ public class ManufacturerController {
         if (errors.hasErrors()) return "manufacturer/editManufacturer";
         try {
             service.update(id, form.getName());
-            ra.addFlashAttribute("flashSuccess", "manufacturer.updated");
+            flashSuccess(ra, "manufacturer.updated");
             return "redirect:/manufacturers";
         } catch (ConflictException e) {
-            errors.rejectValue("name", "duplicate", e.getMessage());
+            flashErrorText(ra, "general.error.manufacturer");
             return "manufacturer/editManufacturer";
         }
     }
@@ -90,15 +87,15 @@ public class ManufacturerController {
         try {
             service.deleteManufacturer(id);
             log.info("Deleted manufacturer id={}", id);
-            ra.addFlashAttribute("flashSuccess", "manufacturer.deleted");
+            flashSuccess(ra, "manufacturer.deleted");
             return "redirect:/manufacturers";
         } catch (DataIntegrityViolationException ex) {
             // there are appliances linked to this brand
-            ra.addFlashAttribute("flashError", "manufacturer.delete.constraint");
             ra.addAttribute("id", id); // <-- lets {id} expand in the redirect URL
+            flashErrorText(ra, "manufacturer.delete.constraint");
             return "redirect:/manufacturers/{id}/edit";
         } catch (NotFoundException ex) {
-            ra.addFlashAttribute("flashError", "manufacturer.notfound");
+            flashErrorText(ra, "manufacturer.notfound");
             return "redirect:/manufacturers";
         }
     }
