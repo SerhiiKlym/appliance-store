@@ -10,7 +10,7 @@
         .table a:hover { text-decoration: underline; }
     </style>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
 <!-- Top navigation / language switcher -->
 <div th:replace="~{menunavy :: navy}"></div>
@@ -29,7 +29,7 @@
     </div>
 </th:block>
 
-<main class="container mt-3">
+<main class="flex-grow-1">
     <div class="d-flex align-items-center justify-content-between mb-3">
         <h1 class="h3 mb-0" th:text="#{appliance.header.list}">Appliances</h1>
         <a class="btn btn-primary" th:href="@{/appliances/add}" th:text="#{appliance.btn.new}">New appliance</a>
