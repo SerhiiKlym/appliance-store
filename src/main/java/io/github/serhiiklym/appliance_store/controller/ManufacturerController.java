@@ -29,19 +29,12 @@ public class ManufacturerController {
         return "manufacturer/manufacturers";
     }
 
-    @GetMapping("/{id}")
-    public String details(Model model, @PathVariable("id") Long id) {
-        model.addAttribute("manufacturer", service.getByIdOrThrow(id));
-        return "manufacturer/manufacturerDetails";
-    }
-
     // GET /manufacturers/new -> create form
     @GetMapping("/new")
     public String showCreateForm(Model model) {
         model.addAttribute("form", new ManufacturerForm());
         return "manufacturer/newManufacturer";
     }
-
 
     // POST /manufacturers -> create then redirect
     @PostMapping
@@ -74,7 +67,6 @@ public class ManufacturerController {
         return "manufacturer/editManufacturer";
     }
 
-
     // POST /manufacturers/{id} -> update then redirect
     @PostMapping("/{id}")
     public String update(@PathVariable Long id,
@@ -83,7 +75,7 @@ public class ManufacturerController {
                          RedirectAttributes ra) {
         if (errors.hasErrors()) return "manufacturer/editManufacturer";
         try {
-            service.update(id, form.getName()); // or your update method
+            service.update(id, form.getName());
             ra.addFlashAttribute("flashSuccess", "manufacturer.updated");
             return "redirect:/manufacturers";
         } catch (ConflictException e) {
