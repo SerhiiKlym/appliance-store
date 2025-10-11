@@ -17,7 +17,7 @@ public interface ApplianceService {
     Appliance create(String name, Category cat, String model, Manufacturer manufacturer, PowerType powerType,
                      String props, String descr, Integer power, BigDecimal price);
 
-    Appliance update(String model, String props, String descr, BigDecimal price);
+    Appliance update(Long id, String model, String props, String descr, BigDecimal price);
 
     void deleteAppliance(Long id);
 }

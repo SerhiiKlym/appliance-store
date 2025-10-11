@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 /**
- * Minimal form object for create/update Appliance.
+ * Minimal form object for create Appliance.
  */
 @Data
 @NoArgsConstructor

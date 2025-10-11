@@ -1,6 +1,7 @@
 package io.github.serhiiklym.appliance_store.service.impl;
 
 import io.github.serhiiklym.appliance_store.error.DuplicateApplianceNameException;
+import io.github.serhiiklym.appliance_store.error.DuplicateManufacturerNameException;
 import io.github.serhiiklym.appliance_store.error.NotFoundException;
 import io.github.serhiiklym.appliance_store.model.Appliance;
 import io.github.serhiiklym.appliance_store.model.Category;
@@ -12,6 +13,7 @@ import io.github.serhiiklym.appliance_store.service.ApplianceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -99,12 +101,38 @@ public class ApplianceServiceImpl implements ApplianceService {
     }
 
     @Override
-    public Appliance update(String model, String props, String descr, BigDecimal price) {
-        return null;
+    public Appliance update(Long id, String model, String props, String descr, BigDecimal price) {
+        log.debug("Updating Appliance by ID={}", id);
+        Appliance a = applianceRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Appliance not found with ID: " + id));
+
+        a.setModel(model);
+        a.setCharacteristic(props);
+        a.setDescription(descr);
+        a.setPrice(price);
+
+
+        try {
+            Appliance saved = applianceRepository.saveAndFlush(a);
+            log.info("Updated appliance with id={}, name={}", saved.getId(), saved.getName());
+            return saved;
+        } catch (DataIntegrityViolationException e) {
+            log.warn("Duplicate appliance on update, id={}", id, e);
+            throw new DuplicateApplianceNameException(
+                    String.format(Locale.ROOT, "Appliance with name '%s' already exists", a.getName())
+            );
+        }
     }
 
     @Override
     public void deleteAppliance(Long id) {
-
+        log.info("Attempting to delete Appliance with ID={}", id);
+        try {
+            applianceRepository.deleteById(id);
+            applianceRepository.flush(); // triggers FK violations
+        } catch (EmptyResultDataAccessException e) {
+            log.warn("No Appliance id={} to delete", id, e);
+            throw new NotFoundException("Appliance not found with ID: " + id); // 404
+        }
     }
 }

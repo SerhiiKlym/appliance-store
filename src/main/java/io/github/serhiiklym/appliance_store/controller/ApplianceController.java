@@ -1,8 +1,10 @@
 package io.github.serhiiklym.appliance_store.controller;
 
+import io.github.serhiiklym.appliance_store.controller.dto.ApplianceEditForm;
 import io.github.serhiiklym.appliance_store.controller.dto.ApplianceForm;
 import io.github.serhiiklym.appliance_store.controller.dto.ManufacturerForm;
 import io.github.serhiiklym.appliance_store.error.DuplicateApplianceNameException;
+import io.github.serhiiklym.appliance_store.error.NotFoundException;
 import io.github.serhiiklym.appliance_store.model.Category;
 import io.github.serhiiklym.appliance_store.model.Manufacturer;
 import io.github.serhiiklym.appliance_store.model.PowerType;
@@ -79,7 +81,7 @@ public class ApplianceController {
     @PostMapping("/{id}")
     public String update(
             @PathVariable Long id,
-            @Valid @ModelAttribute("form") ApplianceForm form,
+            @Valid @ModelAttribute("form") ApplianceEditForm form,
             BindingResult br,
             Model model,
             RedirectAttributes ra) {
@@ -91,10 +93,27 @@ public class ApplianceController {
         }
 
         // Update ONLY the editable fields
-        service.update(form.getModel(), form.getCharacteristic(), form.getDescription(), form.getPrice());
+        service.update(id, form.getModel(), form.getCharacteristic(), form.getDescription(), form.getPrice());
 
         ra.addFlashAttribute("flashSuccess", "appliance.msg.updated");
         return "redirect:/appliances";
+    }
+
+    @PostMapping("/{id}/delete")
+    public String delete(@PathVariable Long id, RedirectAttributes ra) {
+        try {
+            service.deleteAppliance(id);
+            log.info("Deleted Appliance with id={}", id);
+            ra.addFlashAttribute("flashSuccess", "appliance.deleted");
+            return "redirect:/appliances";
+        } catch (DataIntegrityViolationException ex) {
+            ra.addFlashAttribute("flashError", "appliance.delete.constraint");
+            ra.addAttribute("id", id); // <-- lets {id} expand in the redirect URL
+            return "redirect:/appliance/{id}/edit";
+        } catch (NotFoundException ex) {
+            ra.addFlashAttribute("flashError", "appliance.notfound");
+            return "redirect:/appliances";
+        }
     }
 
 
