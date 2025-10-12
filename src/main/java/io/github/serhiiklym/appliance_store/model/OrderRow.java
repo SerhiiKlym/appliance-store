@@ -38,4 +38,9 @@ public class OrderRow {
     @Positive
     private BigDecimal amount;
 
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "ORDER_ID", nullable = false)
+    private Orders order;
+
+
 }
