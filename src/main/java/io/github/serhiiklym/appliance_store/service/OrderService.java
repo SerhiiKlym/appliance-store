@@ -18,7 +18,7 @@ public interface OrderService {
      * Add a row with the given appliance and quantity.
      * If a row for the same appliance exists in the same order, quantities are merged.
      */
-    Orders addRow (Long orderId, Long applianceId, int qty);
+    Orders addRow (Long orderId, Long applianceId, Long qty);
 
     /**
      * Change quantity of a specific row.
