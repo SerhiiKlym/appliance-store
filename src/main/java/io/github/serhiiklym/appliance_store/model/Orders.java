@@ -18,7 +18,7 @@ import java.util.Set;
 @Setter
 public class Orders {
 
-    @OneToMany()
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<OrderRow> orderRowSet = new HashSet<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
