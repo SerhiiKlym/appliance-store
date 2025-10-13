@@ -1,7 +1,6 @@
 package io.github.serhiiklym.appliance_store.service.impl;
 
 import io.github.serhiiklym.appliance_store.error.DuplicateApplianceNameException;
-import io.github.serhiiklym.appliance_store.error.DuplicateManufacturerNameException;
 import io.github.serhiiklym.appliance_store.error.NotFoundException;
 import io.github.serhiiklym.appliance_store.model.Appliance;
 import io.github.serhiiklym.appliance_store.model.Category;
@@ -66,9 +65,6 @@ public class ApplianceServiceImpl implements ApplianceService {
                     String.format(Locale.ROOT, "Appliance name '%s' already exists", trimmedName)
             );
         }
-//        Manufacturer manufacturer = manufacturerRepository.findById(manufacturerId)
-//                .orElseThrow(() -> new NotFoundException("Creating appliance failed: Manufacturer not found with ID: " + manufacturerId));
-
 
         var trimmedModel = trimInputString(model);
         var trimmedProps = trimInputString(props);
