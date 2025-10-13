@@ -58,14 +58,17 @@ class OrderServiceImplTest {
         @DisplayName("creates draft order for an existing client")
         void createsDraftOrder() {
 
-            when(ordersRepository.save(any(Orders.class))).thenAnswer(inv -> {
-                Orders o = inv.getArgument(0);
-                o.setId(555L);          // simulate DB-generated PK
-                return o;
-            });
-
             Long clientId = 101L;
-            when(clientRepository.findById(clientId)).thenReturn(Optional.of(client(clientId)));
+            when(clientRepository.findById(clientId))
+                    .thenReturn(Optional.of(client(clientId)));
+
+            when(ordersRepository.save(any(Orders.class)))
+                    .thenAnswer(inv -> {
+                        Orders o = inv.getArgument(0);
+                        o.setId(555L);           // simulate generated PK
+                        return o;
+                    });
+
 
             Orders saved = service.createOrder(clientId);
 
@@ -75,8 +78,8 @@ class OrderServiceImplTest {
             assertThat(saved.getOrderRowSet()).isNotNull();
             assertThat(saved.getOrderRowSet()).isEmpty();
 
-            // Verify we attempted to persist
             verify(ordersRepository, atLeastOnce()).save(any());
+            verify(ordersRepository, never()).saveAndFlush(any());
         }
 
         @Test
